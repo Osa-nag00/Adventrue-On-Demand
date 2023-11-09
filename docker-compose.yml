@@ -38,6 +38,8 @@ services:
     networks:
       - next-network
 
+volumes:
+  mongodb:
 
 networks:
   next-network:
