@@ -2,6 +2,11 @@ version: "3"
 
 services:
   app:
+    restart: always
+    depends_on:
+      - mongodb
+    env_file:
+      - ./.env
     build:
       context: "./Docker"
       dockerfile: Dockerfile
@@ -10,3 +15,32 @@ services:
     volumes:
       - .:/app/frontend
     command: bash entrypoint
+    networks:
+      - next-network
+
+  mongodb:
+    image: mongo:jammy
+    restart: always
+    env_file:
+      - ./.env
+    #command: --init-file /docker-entrypoint-initdb.d/init-mongo.js
+    volumes:
+      - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo.js:ro
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    ports:
+      - "27017:27017"
+    # move entrypoint scripts over with volume(?)
+    # volumes:
+    #   - dbdata6:/data/db
+    networks:
+      - next-network
+
+volumes:
+  mongodb:
+
+networks:
+  next-network:
+    driver: bridge
