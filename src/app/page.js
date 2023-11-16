@@ -1,7 +1,12 @@
+"use client";
+
+import React, { useState } from "react";
+
+import LoginModule from "./components/LoginModule";
+import RegisterModule from "./components/RegisterModule";
+
 export default function Home() {
-	return (
-		<>
-			<div className='text-9xl flex flex-row justify-center'>Hello World!</div>
-		</>
-	);
+	const [Form, setForm] = useState(<LoginModule />);
+
+	return <div className='flex flex-row justify-center bg-[url(/image_1.png)] bg-cover'></div>;
 }
