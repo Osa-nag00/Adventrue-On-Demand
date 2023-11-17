@@ -1,12 +1,12 @@
 // this causes an error, will figure out later, for now use root user in admin db
-console.log("THIS THIS THIS")
+
 /* db.createUser({
     user: 'root',
     pwd: 'root',
     roles: [ { role: "userAdminAnyDatabase" , db: "admin"} ]
 }); */
 
-console.log("MISS MISS MISS MISS MISS")
+
 
 db = new Mongo().getDB("testDB");
 
