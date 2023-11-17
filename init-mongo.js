@@ -7,20 +7,19 @@
 }); */
 
 
-
 db = new Mongo().getDB("testDB");
 
 db.createCollection('users', { capped: false });
 db.createCollection('stories', { capped: false });
 
-db.stories.insert(
+db.users.insert(
     { 
         "username": "Mario",
         "password" : "saveprincess"
     },
 );
 
-db.users.insert(
+db.stories.insert(
     { 
         "username": "Mario",
         "convo" : 
