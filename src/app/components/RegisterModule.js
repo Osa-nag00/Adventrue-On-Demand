@@ -35,16 +35,18 @@ export default function RegisterModule() {
 	};
 
 	return (
-		<form className='p-5 min-w-fit h-72 bg-[#A1BAA1] rounded-lg flex flex-col justify-evenly space-y-4 items-center'>
-			<TextField type='text' placeholder='Username...' onChange={(e) => setUsername(e.target.value)} />
-			<TextField type='text' placeholder='Password...' onChange={(e) => setPassword(e.target.value)} />
-			<TextField type='text' placeholder='Retype Password...' onChange={(e) => setRetyped_password(e.target.value)} />
-			<Button type='submit' text='Login' ButtonName='Register' />
-			<div className='flex flex-row'>
-				<Link className="text-black text-base font-normal font-['IM FELL English'] hover:underline" href={"/"}>
-					Back To Login
-				</Link>
-			</div>
-		</form>
+		<div className='flex flex-row justify-center'>
+			<form className='p-5 min-w-fit h-72 bg-moduleBg rounded-lg flex flex-col justify-evenly space-y-4 items-center'>
+				<TextField type='text' placeholder='Username...' onChange={(e) => setUsername(e.target.value)} />
+				<TextField type='text' placeholder='Password...' onChange={(e) => setPassword(e.target.value)} />
+				<TextField type='text' placeholder='Retype Password...' onChange={(e) => setRetyped_password(e.target.value)} />
+				<Button type='submit' text='Login' ButtonName='Register' />
+				<div className='flex flex-row'>
+					<Link className='text-black text-base font-normal hover:underline' href={"/Login"}>
+						Back To Login
+					</Link>
+				</div>
+			</form>
+		</div>
 	);
 }

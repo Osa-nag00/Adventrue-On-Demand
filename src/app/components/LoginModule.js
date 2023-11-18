@@ -21,6 +21,7 @@ export default function LoginModule() {
 	const sendToAPI = () => {};
 
 	const saveForm = (e) => {
+		// TODO: take out prevent default
 		e.preventDefault();
 		setFormData({
 			username: username,
@@ -32,23 +33,25 @@ export default function LoginModule() {
 	};
 
 	return (
-		<form
-			onSubmit={saveForm}
-			className='p-5 min-w-fit h-72 bg-[#A1BAA1] rounded-lg flex flex-col justify-evenly space-y-4 items-center'
-		>
-			<TextField type='text' placeholder='Username...' onChange={(e) => setUsername(e.target.value)} />
-			<TextField type='text' placeholder='Password...' onChange={(e) => setPassword(e.target.value)} />
-			<div className='flex flex-row'>
-				<Link className="text-black text-base font-normal font-['IM FELL English'] hover:underline" href={"/"}>
-					Forgot Password?
-				</Link>
-			</div>
-			<Button type='submit' text='Login' ButtonName='Login' />
-			<div className='flex flex-row'>
-				<Link className="text-black text-base font-normal font-['IM FELL English'] hover:underline" href={"/"}>
-					No account?
-				</Link>
-			</div>
-		</form>
+		<div className='flex flex-row justify-center'>
+			<form
+				onSubmit={saveForm}
+				className='p-5 min-fit max-fit  bg-moduleBg rounded-lg flex flex-col justify-evenly space-y-4 items-center'
+			>
+				<TextField type='text' placeholder='Username...' onChange={(e) => setUsername(e.target.value)} />
+				<TextField type='text' placeholder='Password...' onChange={(e) => setPassword(e.target.value)} />
+				<div className='flex flex-row'>
+					<Link className='text-black text-base font-normal  hover:underline' href={"/"}>
+						Forgot Password?
+					</Link>
+				</div>
+				<Button type='submit' text='Login' ButtonName='Login' />
+				<div className='flex flex-row'>
+					<Link className='text-black text-base font-normal  hover:underline' href={"/Register"}>
+						No account?
+					</Link>
+				</div>
+			</form>
+		</div>
 	);
 }

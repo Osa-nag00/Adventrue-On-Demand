@@ -6,6 +6,10 @@ module.exports = {
 		"./src/app/**/*.{js,ts,jsx,tsx,mdx}",
 	],
 	theme: {
+		colors: {
+			moduleBg: "#29493692",
+			buttonBg: "#422006",
+		},
 		extend: {},
 	},
 };

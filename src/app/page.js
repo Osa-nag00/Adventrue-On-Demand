@@ -1,12 +1,14 @@
-"use client";
-
-import React, { useState } from "react";
-
-import LoginModule from "./components/LoginModule";
-import RegisterModule from "./components/RegisterModule";
+import Link from "next/link";
 
 export default function Home() {
-	const [Form, setForm] = useState(<LoginModule />);
-
-	return <div className='flex flex-row justify-center bg-[url(/image_1.png)] bg-cover'></div>;
+	return (
+		<div className='flex flex-row justify-center '>
+			<div className='flex flex-col '>
+				<div>This will have some animation stuff maybe a go to login page</div>
+				<Link href='/Login' className='text-5xl'>
+					Click Here to go to Login
+				</Link>
+			</div>
+		</div>
+	);
 }
