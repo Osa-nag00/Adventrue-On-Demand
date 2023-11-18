@@ -34,6 +34,7 @@ export default function RegisterModule() {
 		// send to API (?)
 	};
 
+	// TODO : need to press enter twice to submit form, not good
 	return (
 		<div className='flex flex-row justify-center'>
 			<form
