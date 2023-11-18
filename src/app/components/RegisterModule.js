@@ -24,19 +24,22 @@ export default function RegisterModule() {
 
 	const saveForm = (e) => {
 		e.preventDefault();
-		setFormData({
+		setRegisterFromData({
 			username: username,
 			password: password,
 			retyped_password: retyped_password,
 		});
 
-		console.log(loginForm);
+		console.log(registerFromData);
 		// send to API (?)
 	};
 
 	return (
 		<div className='flex flex-row justify-center'>
-			<form className='p-5 min-w-fit h-72 bg-moduleBg rounded-lg flex flex-col justify-evenly space-y-4 items-center'>
+			<form
+				onSubmit={saveForm}
+				className='p-5 min-w-fit h-72 bg-moduleBg rounded-lg flex flex-col justify-evenly space-y-4 items-center'
+			>
 				<TextField type='text' placeholder='Username...' onChange={(e) => setUsername(e.target.value)} />
 				<TextField type='text' placeholder='Password...' onChange={(e) => setPassword(e.target.value)} />
 				<TextField type='text' placeholder='Retype Password...' onChange={(e) => setRetyped_password(e.target.value)} />
