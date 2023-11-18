@@ -6,10 +6,12 @@ module.exports = {
 		"./src/app/**/*.{js,ts,jsx,tsx,mdx}",
 	],
 	theme: {
-		colors: {
-			moduleBg: "#29493692",
-			buttonBg: "#422006",
+		extend: {
+			colors: {
+				moduleBg: "#294936bc",
+				buttonBg: "#422006",
+				bg: "#C19875",
+			},
 		},
-		extend: {},
 	},
 };

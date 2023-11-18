@@ -1,7 +1,6 @@
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Title from "./components/sub-components/Title";
 import localFont from "next/font/local";
 
 export const metadata = {
@@ -26,12 +25,13 @@ const ImFellEnglish = localFont({
 
 export default function RootLayout({ children }) {
 	return (
-		<html lang='en' className='bg-[url(/image_1.png)] bg-cover'>
+		<html lang='en' className='bg-[url(/Background_Image.png)] bg-repeat-y bg-cover bg-center '>
 			<body className={ImFellEnglish.className}>
-				<Navbar />
-				<Title />
-				{children}
-				<Footer />
+				<div>
+					<Navbar />
+					{children}
+					<Footer />
+				</div>
 			</body>
 		</html>
 	);
