@@ -27,10 +27,9 @@ export default function RootLayout({ children }) {
 	return (
 		<html lang='en' className='bg-[url(/Background_Image.png)] bg-repeat-y bg-cover bg-center '>
 			<body className={ImFellEnglish.className}>
-				<div>
-					<Navbar />
-					{children}
-					<Footer />
+				<div className='flex flex-col'>
+					{/* come back and figure out what to do with nav */}
+					<div>{children}</div>
 				</div>
 			</body>
 		</html>
