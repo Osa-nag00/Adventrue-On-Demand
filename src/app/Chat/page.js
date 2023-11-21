@@ -28,6 +28,15 @@ export default function Chat() {
 			setMessages([...messages, { content: message, sender: "me" }]);
 			setMessage("");
 		}
+
+		// this is where the AI response will be added
+		let test = [];
+
+		messages.map((msg) => {
+			test.push(JSON.stringify(msg));
+		});
+
+		console.log(test);
 	};
 
 	useEffect(() => {
