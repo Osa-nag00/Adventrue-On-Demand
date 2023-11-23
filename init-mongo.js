@@ -20,9 +20,14 @@ db.users.insert(
 );
 
 db.stories.insert(
-    { 
+    {
+        "name" : "One question", 
         "username": "Mario",
         "convo" : 
+            [
+                {"role": "user", "content":"Hey!"}, {"role":"openai","content":"Hello, Mario"}, {"role":"user", "content": "How do I save the princess!"},  {"role":"openai","content":"Jumping on Goombas."} 
+            ],
+        "convoold" : 
             [
                 "Hey!", "Hello, Mario", "How do I save the princess!", "Jumping on Goombas.", "Great, thanks!"
             ],
