@@ -28,6 +28,7 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+cop4331-mern-backend/.env
 
 # vercel
 .vercel
