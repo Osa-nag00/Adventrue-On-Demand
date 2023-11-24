@@ -5,8 +5,6 @@ import React, { useState, useEffect, useRef } from "react";
 export default function Chat() {
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
-	const [response, setResponse] = useState("");
-	const [responses, setResponses] = useState([]);
 	const messagesContainerRef = useRef(null);
 
 	const getSide = (msg) => {
