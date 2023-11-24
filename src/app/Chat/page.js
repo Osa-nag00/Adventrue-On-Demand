@@ -5,6 +5,8 @@ import React, { useState, useEffect, useRef } from "react";
 export default function Chat() {
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
+	const [response, setResponse] = useState("");
+	const [responses, setResponses] = useState([]);
 	const messagesContainerRef = useRef(null);
 
 	const getSide = (msg) => {
@@ -19,24 +21,32 @@ export default function Chat() {
 		setMessage(event.target.value);
 	};
 
+
 	// change this to the actual AI response later
 	// change the sender from "me" to test the other side
 	const handleSendMessage = (e) => {
 		e.preventDefault();
 
+		// result array to save user message and response
+		let result = [...messages];
 		if (message.trim() !== "") {
-			setMessages([...messages, { content: message, sender: "me" }]);
+			result.push({ content: message, sender: "me" });
 			setMessage("");
 		}
-
-		// this is where the AI response will be added
+		
+		// adding user messages into an array for saving
 		let test = [];
 
 		messages.map((msg) => {
 			test.push(JSON.stringify(msg));
 		});
-
 		console.log(test);
+
+		// this is where the AI response will be added
+		// let response = fetch(api endpoint)
+		let response = "this is the ai response"
+		result.push({ content: response, sender: "AI"});
+		setMessages(result);
 	};
 
 	useEffect(() => {
@@ -60,6 +70,7 @@ export default function Chat() {
 					</div>
 				))}
 			</div>
+			
 
 			{/* stuff below is the msg enter box */}
 			<form onSubmit={handleSendMessage}>
