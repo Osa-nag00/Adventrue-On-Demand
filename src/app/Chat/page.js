@@ -80,7 +80,8 @@ export default function Chat() {
 						onChange={handleMessageChange}
 						placeholder='Type your message...'
 					/>
-					<button type='submit' onClick={handleSendMessage}>
+					<div class="pr-4"></div>
+					<button type='submit' className='w-64 h-10 bg-buttonBg rounded-lg border-[1px] border-black ' onClick={handleSendMessage}>
 						Send
 					</button>
 				</div>
