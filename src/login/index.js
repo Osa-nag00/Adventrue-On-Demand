@@ -1,15 +1,15 @@
 import express from 'express';
-import session from 'express-session';
 import dotenv from 'dotenv';
 import mongoose from "mongoose";
 import cors from 'cors';
 import path from "path";
 import passport from 'passport';
+import cookieSession from 'cookie-session';
 import './auth.js';
 import { User } from './models/userModel.js';
 
 function isLoggedIn(request, response, next) {
-    request.user ? next() : response.sendStatus(401);
+    request.user ? next() : response.redirect('/');
 }
 
 const __dirname = path.resolve();
@@ -17,10 +17,15 @@ const templatePath = path.join(__dirname, '../templates');
 dotenv.config({ path: '../../.env' });
 
 const app = express();
-app.use(session({ secret: 'cats' }));
+app.use(cookieSession({
+    maxAge: 24 * 60 * 60 * 1000,
+    keys: [process.env.cookieKey]
+}));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Basic front end examples - we can eventually delete
 app.set("view engine", "hbs");
 app.set("views", templatePath);
 app.use(express.urlencoded({extended:false}));
@@ -112,11 +117,12 @@ app.post('/login', async (request, response) => {
     }
 })
 
-// Route for Google Authentication (OAuth)
+// Route for Google Authentication
 app.get('/auth/google',
     passport.authenticate('google', { scope: ['email', 'profile'] })
 );
 
+// Callback route for Google to redirect to
 app.get('/google/callback',
     passport.authenticate('google', {
         successRedirect: '/protected',
@@ -124,24 +130,18 @@ app.get('/google/callback',
     })
 );
 
-app.get('/auth/failure', (request, response) => {
-    response.status(400).json({ error: "Unable to authenticate with Google" });
-});
-
-// Route for when User is authenticated (shows Game page)
+// Route for when User is authenticated (this should redirect to play game route)
 app.get('/protected', isLoggedIn, (request, response) => {
     response.render("home");
 });
 
-app.get('/logout', function(request, response, next) {
-    if (request.user) {
-        request.session.destroy();
-        response.redirect("/");
-    }
+app.get('/auth/failure', (request, response) => {
+    response.status(400).json({ error: "Unable to authenticate with Google" });
+});
 
-    else {
-        response.redirect("/");
-    }
+app.get('/logout', (request, response) => {
+    request.logout();
+    response.redirect('/');
 });
 
 // Connect to database

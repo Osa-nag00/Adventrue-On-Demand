@@ -15,6 +15,7 @@ passport.use(new GoogleStrategy({
     User.findOne({ email : profile._json.email }).then((currentUser) => {
       if (currentUser) {
         console.log("current user is: ", currentUser);
+        done(null, currentUser);
       }
 
       // Else create new user in db
@@ -23,6 +24,7 @@ passport.use(new GoogleStrategy({
           email: profile._json.email,
         }).save().then((newUser) => {
           console.log("new user created: " + newUser);
+          done(null, newUser);
         })
       }
     });
@@ -30,11 +32,13 @@ passport.use(new GoogleStrategy({
 ));
 
 passport.serializeUser(function(user, done) {
-    done(null, user);
+    done(null, user.id);
 });
 
-passport.deserializeUser(function(user, done) {
-    done(null, user);
+passport.deserializeUser(function(id, done) {
+    User.findById(id).then((user) => {
+      done(null, user);
+    });
 });
 
 
