@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { FormEvent, useState } from "react";
 import TextField from "./sub-components/TextField";
 import Button from "./sub-components/Button";
@@ -24,27 +25,39 @@ export default function RegisterModule() {
 
 	const saveForm = (e) => {
 		e.preventDefault();
-		setFormData({
+		setRegisterFromData({
 			username: username,
 			password: password,
 			retyped_password: retyped_password,
 		});
 
-		console.log(loginForm);
+		console.log(registerFromData);
 		// send to API (?)
 	};
 
+	// TODO : need to press enter twice to submit form, not good
 	return (
-		<form className='p-5 min-w-fit h-72 bg-[#A1BAA1] rounded-lg flex flex-col justify-evenly space-y-4 items-center'>
-			<TextField type='text' placeholder='Username...' onChange={(e) => setUsername(e.target.value)} />
-			<TextField type='text' placeholder='Password...' onChange={(e) => setPassword(e.target.value)} />
-			<TextField type='text' placeholder='Retype Password...' onChange={(e) => setRetyped_password(e.target.value)} />
-			<Button type='submit' text='Login' ButtonName='Register' />
-			<div className='flex flex-row'>
-				<Link className="text-black text-base font-normal font-['IM FELL English'] hover:underline" href={"/"}>
-					Back To Login
-				</Link>
+		<motion.div initial={{ opacity: 0, scale: 0.5 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 1 }}>
+			<div className='flex flex-row justify-center'>
+				<form
+					onSubmit={saveForm}
+					className='p-5 min-w-fit h-72 bg-moduleBg rounded-lg flex flex-col justify-evenly space-y-4 items-center'
+				>
+					<TextField type='text' placeholder='Email...' onChange={(e) => setUsername(e.target.value)} />
+					<TextField type='text' placeholder='Password...' onChange={(e) => setPassword(e.target.value)} />
+					<TextField
+						type='text'
+						placeholder='Retype Password...'
+						onChange={(e) => setRetyped_password(e.target.value)}
+					/>
+					<Button type='submit' text='Register' ButtonName='Register' />
+					<div className='flex flex-row'>
+						<Link className='text-black text-base font-normal hover:underline' href={"/Login"}>
+							Back To Login
+						</Link>
+					</div>
+				</form>
 			</div>
-		</form>
+		</motion.div>
 	);
 }

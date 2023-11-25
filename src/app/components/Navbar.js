@@ -1,3 +1,9 @@
+import Image from "next/image";
+
 export default function Navbar() {
-	return <header className='text-5xl flex flex-row justify-center bg-slate-700'>Navbar</header>;
+	return (
+		<header className='text-5xl flex justify-center bg-navbarBg bg-cover '>
+			<div>Navbar</div>
+		</header>
+	);
 }
