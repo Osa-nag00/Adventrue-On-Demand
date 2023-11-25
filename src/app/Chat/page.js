@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Dropdown from "../components/sub-components/Dropdown";
 
 export default function Chat() {
 	const [message, setMessage] = useState("");
@@ -60,6 +61,13 @@ export default function Chat() {
 	return (
 		// this for showing the msgs
 		<div className='flex flex-col h-screen'>
+
+			<div className="flex justify-end mr-4 mt-4">
+                <div>
+                    <Dropdown/>
+                </div>
+            </div>
+
 			<div className={`flex-grow overflow-y-auto space-y-5 break-all p-2 px-10`} ref={messagesContainerRef}>
 				{messages.map((msg, index) => (
 					<div key={index} className={`flex ${getSide(msg)} `}>
