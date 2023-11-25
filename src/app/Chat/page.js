@@ -19,7 +19,6 @@ export default function Chat() {
 		setMessage(event.target.value);
 	};
 
-
 	// change this to the actual AI response later
 	// change the sender from "me" to test the other side
 	const handleSendMessage = (e) => {
@@ -31,7 +30,7 @@ export default function Chat() {
 			result.push({ content: message, sender: "me" });
 			setMessage("");
 		}
-		
+
 		// adding user messages into an array for saving
 		let test = [];
 
@@ -42,8 +41,8 @@ export default function Chat() {
 
 		// this is where the AI response will be added
 		// let response = fetch(api endpoint)
-		let response = "this is the ai response"
-		result.push({ content: response, sender: "AI"});
+		let response = "this is the ai response";
+		result.push({ content: response, sender: "AI" });
 		setMessages(result);
 	};
 
@@ -68,7 +67,6 @@ export default function Chat() {
 					</div>
 				))}
 			</div>
-			
 
 			{/* stuff below is the msg enter box */}
 			<form onSubmit={handleSendMessage}>
@@ -80,8 +78,12 @@ export default function Chat() {
 						onChange={handleMessageChange}
 						placeholder='Type your message...'
 					/>
-					<div class="pr-4"></div>
-					<button type='submit' className='w-64 h-10 bg-buttonBg rounded-lg border-[1px] border-black ' onClick={handleSendMessage}>
+					<div className='pr-4'></div>
+					<button
+						type='submit'
+						className='w-64 h-10 bg-buttonBg rounded-lg border-[1px] border-black '
+						onClick={handleSendMessage}
+					>
 						Send
 					</button>
 				</div>
