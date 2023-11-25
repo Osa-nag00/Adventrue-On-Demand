@@ -22,7 +22,9 @@ passport.use(new GoogleStrategy({
       else {
         new User({
           email: profile._json.email,
-        }).save().then((newUser) => {
+        })
+        .save()
+        .then((newUser) => {
           console.log("new user created: " + newUser);
           done(null, newUser);
         })
