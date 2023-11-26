@@ -4,15 +4,18 @@ import GoogleProvider from "next-auth/providers/google";
 const GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID;
 const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET;
 
-const authOptions = {
-	session: {
-		strategy: "jwt",
-	},
-
+export default NextAuth({
 	providers: [
 		GoogleProvider({
 			clientId: GOOGLE_CLIENT_ID,
 			clientSecret: GOOGLE_CLIENT_SECRET,
+			authorization: {
+				params: {
+					prompt: "consent",
+					access_type: "offline",
+					response_type: "code",
+				},
+			},
 		}),
 	],
 
@@ -22,7 +25,4 @@ const authOptions = {
 			return true;
 		},
 	},
-};
-
-const handler = NextAuth(authOptions);
-export { handler as GET, handler as POST };
+});
