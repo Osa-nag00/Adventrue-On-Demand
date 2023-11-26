@@ -91,48 +91,53 @@ export default function Chat() {
 
 	return (
 		<div className='flex flex-col h-screen'>
-			{/* dropdown */}
-			<div className='flex justify-end mr-4 mt-4'>
-				<div>
-					<Popover>
-						<Popover.Button className={"text-xl"} onClick={() => (popUp == true ? setPopUp(false) : setPopUp(false))}>
-							Options
-						</Popover.Button>
-						<div className='bg-neutral-950/50'>
-							<Popover.Panel>
-								<div className='flex flex-col gap-2 p-2'>
-									<form>
-										<input
-											className='p-2 w-32 h-8 bg-white border rounded-xl border-stone-500 text-black text-m font-normal font-["IM FELL English"]'
-											type='text'
-											placeholder='Search Game...'
-											onChange={(e) => setSearchInput(e.target.value)}
-											value={searchInput}
-											onSubmit={handleSubmission}
-										/>
-									</form>
-									<div className='bg-white'>
-										<ul>
-											{searchResults.map((result) => (
-												<li key={result.id} className='flex items-center border-b p-2'>
-													{result.title}
-												</li>
-											))}
-										</ul>
+			<nav className="bg-yellow-950/80">
+				{/* dropdown */}
+				<div className='flex justify-end p-6'>
+					<div>
+						<Popover>
+							<Popover.Button className={"text-xl"} onClick={() => (popUp == true ? setPopUp(false) : setPopUp(false))}>
+								Options
+							</Popover.Button>
+							<div className='bg-neutral-950/50'>
+								<Popover.Panel>
+									<div className='flex flex-col p-3 gap-2'>
+										<form className="mb-0">
+											<input
+												className='p-2 w-32 h-8 bg-white border rounded-xl border-stone-500 text-black text-m font-normal font-["IM FELL English"]'
+												type='text'
+												placeholder='Search Game...'
+												onChange={(e) => setSearchInput(e.target.value)}
+												value={searchInput}
+												onSubmit={handleSubmission}
+											/>
+										</form>
+										<div className='bg-white'>
+											<ul>
+												{searchResults.map((result) => (
+													<li key={result.id} className='flex items-center border-b p-2'>
+														{result.title}
+													</li>
+												))}
+											</ul>
+										</div>
+										<button className='text-white' onClick={handlePopUp}>
+											Save Game
+										</button>
+										<button className='text-white' onClick={handleSignOut}>
+											Logout
+										</button>
 									</div>
-									<button className='text-white' onClick={handlePopUp}>
-										Save Game
-									</button>
-									<button className='text-white' onClick={handleSignOut}>
-										Logout
-									</button>
-								</div>
-							</Popover.Panel>
-						</div>
-					</Popover>
+								</Popover.Panel>
+							</div>
+						</Popover>
+					</div>
 				</div>
+			</nav>
+			
+			<div className="m-4">
+				{popUp && <Popup onClose={() => setPopUp(false)} />}
 			</div>
-			{popUp && <Popup onClose={() => setPopUp(false)} />}
 
 			{/* render messages */}
 			<div className={`flex-grow overflow-y-auto space-y-5 break-all p-2 px-10`} ref={messagesContainerRef}>
