@@ -11,11 +11,11 @@ export default function Chat() {
 	const [messages, setMessages] = useState([]);
 	const messagesContainerRef = useRef(null);
 	const { data: session } = useSession();
-	const router = useRouter();
+	const router = useRouter("");
 
 	// if not logged in, redirect to login page
 	if (!session) {
-		router.push("/");
+		router.replace("/");
 	}
 
 	const handleSignOut = (e) => {
