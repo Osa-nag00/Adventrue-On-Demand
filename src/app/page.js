@@ -1,6 +1,7 @@
 import Title from "./components/sub-components/Title";
 import MainLoginButton from "./components/sub-components/MainLoginButton";
 import UserCard from "./components/UserCard";
+import GoogleSignInButton from "./components/sub-components/GoogleSignInButton";
 
 export default function Home() {
 	// TODO: button goes to chat rn, change to login later (?)
@@ -19,6 +20,7 @@ export default function Home() {
 						cupidatat sunt ullamco ea laborum incididunt labore sint anim ea proident. Tempor excepteur magna enim
 						laborum aute do.
 					</p>
+					<GoogleSignInButton />
 					<MainLoginButton />
 				</div>
 			</div>

@@ -1,16 +1,16 @@
 "use client";
-
-import React from "react";
+import FullUserCard from "./sub-components/FullUserCard";
+import EmptyUserCard from "./sub-components/EmptyUserCard";
+import { useSession } from "next-auth/react";
 
 export default function UserCard() {
 	// Get the profile picture and account name from the Google session
-	const profilePicture = null;
-	const accountName = "Osa Naghise";
+	// const [rendered, setRendered] = useState(<FullUserCard />);
+	const { data: session } = useSession();
 
-	return (
-		<div className='bg-transparent p-4 rounded-lg shadow-lg'>
-			<img src={profilePicture} alt='Profile Picture' />
-			<p>{accountName}</p>
-		</div>
-	);
+	if (session) {
+		return <FullUserCard />;
+	} else {
+		return <EmptyUserCard />;
+	}
 }

@@ -1,11 +1,19 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Chat() {
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
 	const messagesContainerRef = useRef(null);
+	const { data: session } = useSession();
+	const router = useRouter();
+
+	if (!session) {
+		signIn("google", { callbackUrl: "/Chat" });
+	}
 
 	const getSide = (msg) => {
 		return msg.sender === "me" ? "justify-end" : "justify-start";

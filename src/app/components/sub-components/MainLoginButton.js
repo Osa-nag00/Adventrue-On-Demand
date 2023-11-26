@@ -1,22 +1,24 @@
 "use client";
 
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 export default function MainLoginButton() {
 	const { data: session } = useSession();
 	const router = useRouter();
 
-	function handleClick(e) {
-		if (session) {
-			router.push("/chat");
-		} else {
-			signIn("google");
-		}
+	function handleClick() {
+		router.push("/Chat");
 	}
 
 	return (
-		<button className='bg-moduleBg p-6 rounded-3xl text-white' type='button' onClick={handleClick}>
+		<button
+			className={`${session ? "bg-moduleBg" : "bg-navbarBg"}  p-6 rounded-3xl text-white  ${
+				session ? "" : "pointer-events-none"
+			}`}
+			type='button'
+			onClick={handleClick}
+		>
 			Click Here to Start Your Journey
 		</button>
 	);
