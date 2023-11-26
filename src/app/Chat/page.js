@@ -5,6 +5,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Popover } from "@headlessui/react";
 import Popup from "../components/sub-components/Popup.js";
+import UserCard from "../components/UserCard.js";
 
 export default function Chat() {
 	const [message, setMessage] = useState("");
@@ -17,11 +18,6 @@ export default function Chat() {
 	if (!session) {
 		router.replace("/");
 	}
-
-	const handleSignOut = (e) => {
-		e.preventDefault();
-		signOut("google");
-	};
 
 	const [searchInput, setSearchInput] = useState("");
 	const [searchResults, setSearchResult] = useState([]);
@@ -91,50 +87,48 @@ export default function Chat() {
 
 	return (
 		<div className='flex flex-col h-screen'>
-			<nav className="bg-yellow-950/80">
-				{/* dropdown */}
-				<div className='flex justify-end p-6'>
-					<div>
-						<Popover>
-							<Popover.Button className={"text-xl"} onClick={() => (popUp == true ? setPopUp(false) : setPopUp(false))}>
-								Options
-							</Popover.Button>
-							<div className='bg-neutral-950/50'>
-								<Popover.Panel>
-									<div className='flex flex-col p-3 gap-2'>
-										<form className="mb-0">
-											<input
-												className='p-2 w-32 h-8 bg-white border rounded-xl border-stone-500 text-black text-m font-normal font-["IM FELL English"]'
-												type='text'
-												placeholder='Search Game...'
-												onChange={(e) => setSearchInput(e.target.value)}
-												value={searchInput}
-												onSubmit={handleSubmission}
-											/>
-										</form>
-										<div className='bg-white'>
-											<ul>
-												{searchResults.map((result) => (
-													<li key={result.id} className='flex items-center border-b p-2'>
-														{result.title}
-													</li>
-												))}
-											</ul>
-										</div>
-										<button className='text-white' onClick={handlePopUp}>
-											Save Game
-										</button>
-										<button className='text-white' onClick={handleSignOut}>
-											Logout
-										</button>
-									</div>
-								</Popover.Panel>
-							</div>
-						</Popover>
-					</div>
+			<nav className="flex justify-between">
+				<div>
+					<UserCard/>
 				</div>
+				{/* dropdown */}
+				<div>
+					<Popover>
+						<Popover.Button className={"bg-navbarBg rounded-lg shadow-lg m-4 text-white text-xl p-6 mb-0"} onClick={() => (popUp == true ? setPopUp(false) : setPopUp(false))}>
+							Options
+						</Popover.Button>
+						<div className='bg-navbarBg'>
+							<Popover.Panel>
+								<div className='flex flex-col p-3 gap-2'>
+									<form className="mb-0">
+										<input
+											className='p-2 w-32 h-8 bg-white border rounded-xl border-stone-500 text-black text-m font-normal font-["IM FELL English"]'
+											type='text'
+											placeholder='Search Game...'
+											onChange={(e) => setSearchInput(e.target.value)}
+											value={searchInput}
+											onSubmit={handleSubmission}
+										/>
+									</form>
+									<div className='bg-white'>
+										<ul>
+											{searchResults.map((result) => (
+												<li key={result.id} className='flex items-center border-b p-2'>
+													{result.title}
+												</li>
+											))}
+										</ul>
+									</div>
+									<button className='text-white' onClick={handlePopUp}>
+										Save Game
+									</button>
+								</div>
+							</Popover.Panel>
+						</div>
+					</Popover>
+				</div>	
 			</nav>
-			
+
 			<div className="m-4">
 				{popUp && <Popup onClose={() => setPopUp(false)} />}
 			</div>
