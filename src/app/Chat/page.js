@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { signIn, useSession } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Popover } from "@headlessui/react";
 import Popup from "../components/sub-components/Popup.js";
@@ -13,9 +13,16 @@ export default function Chat() {
 	const { data: session } = useSession();
 	const router = useRouter();
 
+	// if not logged in, redirect to login page
 	if (!session) {
-		signIn("google", { callbackUrl: "/Chat" });
+		router.push("/");
 	}
+
+	const handleSignOut = (e) => {
+		e.preventDefault();
+		signOut("google");
+	};
+
 	const [searchInput, setSearchInput] = useState("");
 	const [searchResults, setSearchResult] = useState([]);
 	const [popUp, setPopUp] = useState(false);
@@ -84,10 +91,9 @@ export default function Chat() {
 
 	return (
 		<div className='flex flex-col h-screen'>
-
 			{/* dropdown */}
-			<div className="flex justify-end mr-4 mt-4">
-                <div>
+			<div className='flex justify-end mr-4 mt-4'>
+				<div>
 					<Popover>
 						<Popover.Button className={"text-xl"} onClick={() => (popUp == true ? setPopUp(false) : setPopUp(false))}>
 							Options
@@ -105,15 +111,21 @@ export default function Chat() {
 											onSubmit={handleSubmission}
 										/>
 									</form>
-									<div className="bg-white">
-                                        <ul>
-                                            {searchResults.map((result) => (
-                                            <li key={result.id} className="flex items-center border-b p-2">{result.title}</li>
-                                            ))}
-                                        </ul>
-                                    </div>
-									<button className='text-white' onClick={handlePopUp}>Save Game</button>
-									<button className='text-white'>Logout</button>
+									<div className='bg-white'>
+										<ul>
+											{searchResults.map((result) => (
+												<li key={result.id} className='flex items-center border-b p-2'>
+													{result.title}
+												</li>
+											))}
+										</ul>
+									</div>
+									<button className='text-white' onClick={handlePopUp}>
+										Save Game
+									</button>
+									<button className='text-white' onClick={handleSignOut}>
+										Logout
+									</button>
 								</div>
 							</Popover.Panel>
 						</div>
