@@ -1,16 +1,24 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Popover } from '@headlessui/react'
-import Popup from '../components/sub-components/Popup.js'
+import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { Popover } from "@headlessui/react";
+import Popup from "../components/sub-components/Popup.js";
 
 export default function Chat() {
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
 	const messagesContainerRef = useRef(null);
-	const [searchInput, setSearchInput] = useState('');
-    const [searchResults, setSearchResult] = useState([]);
-    const [popUp, setPopUp] = useState(false);
+	const { data: session } = useSession();
+	const router = useRouter();
+
+	if (!session) {
+		signIn("google", { callbackUrl: "/Chat" });
+	}
+	const [searchInput, setSearchInput] = useState("");
+	const [searchResults, setSearchResult] = useState([]);
+	const [popUp, setPopUp] = useState(false);
 
 	const getSide = (msg) => {
 		return msg.sender === "me" ? "justify-end" : "justify-start";
@@ -52,16 +60,16 @@ export default function Chat() {
 	};
 
 	const handleSubmission = (event) => {
-        // send fetch to db
-        let res = [];
-        // res = fetch(searchInput)
-        // setSearchResults(res)
-        setSearchInput('');
-    };
+		// send fetch to db
+		let res = [];
+		// res = fetch(searchInput)
+		// setSearchResults(res)
+		setSearchInput("");
+	};
 
-    const handlePopUp = (event) => {
-        setPopUp(!popUp);
-    };
+	const handlePopUp = (event) => {
+		setPopUp(!popUp);
+	};
 
 	useEffect(() => {
 		messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
@@ -81,7 +89,9 @@ export default function Chat() {
 			<div className="flex justify-end mr-4 mt-4">
                 <div>
 					<Popover>
-						<Popover.Button className={'text-xl'} onClick={() => popUp == true ? setPopUp(false) : setPopUp(false)}>Options</Popover.Button>
+						<Popover.Button className={"text-xl"} onClick={() => (popUp == true ? setPopUp(false) : setPopUp(false))}>
+							Options
+						</Popover.Button>
 						<div className='bg-neutral-950/50'>
 							<Popover.Panel>
 								<div className='flex flex-col gap-2 p-2'>
@@ -104,13 +114,13 @@ export default function Chat() {
                                     </div>
 									<button className='text-white' onClick={handlePopUp}>Save Game</button>
 									<button className='text-white'>Logout</button>
-								</div>                    
+								</div>
 							</Popover.Panel>
 						</div>
 					</Popover>
-                </div>
-            </div>
-			{popUp && <Popup onClose={() => setPopUp(false)} /> }
+				</div>
+			</div>
+			{popUp && <Popup onClose={() => setPopUp(false)} />}
 
 			{/* render messages */}
 			<div className={`flex-grow overflow-y-auto space-y-5 break-all p-2 px-10`} ref={messagesContainerRef}>
