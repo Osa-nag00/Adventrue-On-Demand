@@ -1,5 +1,5 @@
 import Title from "./components/sub-components/Title";
-import Link from "next/link";
+import MainLoginButton from "./components/sub-components/MainLoginButton";
 
 export default function Home() {
 	// TODO: button goes to chat rn, change to login later (?)
@@ -14,12 +14,7 @@ export default function Home() {
 					cupidatat sunt ullamco ea laborum incididunt labore sint anim ea proident. Tempor excepteur magna enim laborum
 					aute do.
 				</p>
-
-				<Link href='/Chat'>
-					<button className='bg-moduleBg p-6 rounded-3xl text-white' type='button'>
-						Click Here to Start Your Journey
-					</button>
-				</Link>
+				<MainLoginButton />
 			</div>
 		</div>
 	);
