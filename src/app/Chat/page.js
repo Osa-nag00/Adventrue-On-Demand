@@ -77,7 +77,7 @@ export default function Chat() {
 	return (
 		<div className='flex flex-col h-screen'>
 
-			{/* {dropdown} */}
+			{/* dropdown */}
 			<div className="flex justify-end mr-4 mt-4">
                 <div>
 					<Popover>
@@ -95,13 +95,13 @@ export default function Chat() {
 											onSubmit={handleSubmission}
 										/>
 									</form>
-									<div>
-									{searchResults.map((res, index) => (
-										<div key={index} >
-											<div href={res.link}>{res.name}</div>
-										</div>
-									))}
-									</div>
+									<div className="bg-white">
+                                        <ul>
+                                            {searchResults.map((result) => (
+                                            <li key={result.id} className="flex items-center border-b p-2">{result.title}</li>
+                                            ))}
+                                        </ul>
+                                    </div>
 									<button className='text-white' onClick={handlePopUp}>Save Game</button>
 									<button className='text-white'>Logout</button>
 								</div>                    
@@ -112,6 +112,7 @@ export default function Chat() {
             </div>
 			{popUp && <Popup onClose={() => setPopUp(false)} /> }
 
+			{/* render messages */}
 			<div className={`flex-grow overflow-y-auto space-y-5 break-all p-2 px-10`} ref={messagesContainerRef}>
 				{messages.map((msg, index) => (
 					<div key={index} className={`flex ${getSide(msg)} `}>
