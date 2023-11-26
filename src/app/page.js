@@ -1,4 +1,3 @@
-import GoogleSignIn from "./components/GoogleSignIn";
 import Title from "./components/sub-components/Title";
 import Link from "next/link";
 
@@ -21,12 +20,6 @@ export default function Home() {
 						Click Here to Start Your Journey
 					</button>
 				</Link>
-
-				<Link href='/Login' className='text-2xl font-bold'>
-					Click Here to go to Login
-				</Link>
-
-				<GoogleSignIn />
 			</div>
 		</div>
 	);
