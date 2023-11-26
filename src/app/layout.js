@@ -1,7 +1,7 @@
 import "./globals.css";
-import Navbar from "./components/Navbar";
-import Footer from "./components/Footer";
 import localFont from "next/font/local";
+import { getServerSession } from "next-auth";
+import SessionProvider from "./components/SessionProvider";
 
 export const metadata = {
 	title: "Adventure On Demand",
@@ -23,13 +23,18 @@ const ImFellEnglish = localFont({
 	],
 });
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+	const session = await getServerSession();
+
 	return (
 		<html lang='en' className='bg-[url(/Background_Image.png)] bg-repeat-y bg-cover bg-center '>
 			<body className={ImFellEnglish.className}>
 				<div className='flex flex-col'>
-					{/* come back and figure out what to do with nav */}
-					<div>{children}</div>
+					<div>
+						<SessionProvider session={session}>
+							<main>{children}</main>
+						</SessionProvider>
+					</div>
 				</div>
 			</body>
 		</html>
