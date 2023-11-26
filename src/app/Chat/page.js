@@ -1,11 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Popover } from "@headlessui/react";
-import Popup from "../components/sub-components/Popup.js";
-import UserCard from "../components/UserCard.js";
+import ChatNav from "./ChatNav.js";
 
 export default function Chat() {
 	const [message, setMessage] = useState("");
@@ -19,12 +17,8 @@ export default function Chat() {
 		router.replace("/");
 	}
 
-	const [searchInput, setSearchInput] = useState("");
-	const [searchResults, setSearchResult] = useState([]);
-	const [popUp, setPopUp] = useState(false);
-
 	const getSide = (msg) => {
-		return msg.sender === "me" ? "justify-end" : "justify-start";
+		return msg.sender === "user" ? "justify-end" : "justify-start";
 	};
 
 	const getColor = (msg) => {
@@ -46,32 +40,21 @@ export default function Chat() {
 			result.push({ content: message, sender: "me" });
 			setMessage("");
 		}
+	};
 
-		// adding user messages into an array for saving
-		let test = [];
-
-		messages.map((msg) => {
-			test.push(JSON.stringify(msg));
+	const onLoad = async () => {
+		const response = await fetch("/api/chats", {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify({
+				conversation: test,
+			}),
 		});
-		console.log(test);
 
-		// this is where the AI response will be added
-		// let response = fetch(api endpoint)
-		let response = "this is the ai response";
-		result.push({ content: response, sender: "AI" });
-		setMessages(result);
-	};
-
-	const handleSubmission = (event) => {
-		// send fetch to db
-		let res = [];
-		// res = fetch(searchInput)
-		// setSearchResults(res)
-		setSearchInput("");
-	};
-
-	const handlePopUp = (event) => {
-		setPopUp(!popUp);
+		const data = await response.json();
+		console.log(data);
 	};
 
 	useEffect(() => {
@@ -87,52 +70,7 @@ export default function Chat() {
 
 	return (
 		<div className='flex flex-col h-screen'>
-			<nav className="flex justify-between">
-				<div>
-					<UserCard/>
-				</div>
-				{/* dropdown */}
-				<div>
-					<Popover>
-						<Popover.Button className={"bg-navbarBg rounded-lg shadow-lg m-4 text-white text-xl p-6 mb-0"} onClick={() => (popUp == true ? setPopUp(false) : setPopUp(false))}>
-							Options
-						</Popover.Button>
-						<div className='bg-navbarBg'>
-							<Popover.Panel>
-								<div className='flex flex-col p-3 gap-2'>
-									<form className="mb-0">
-										<input
-											className='p-2 w-32 h-8 bg-white border rounded-xl border-stone-500 text-black text-m font-normal font-["IM FELL English"]'
-											type='text'
-											placeholder='Search Game...'
-											onChange={(e) => setSearchInput(e.target.value)}
-											value={searchInput}
-											onSubmit={handleSubmission}
-										/>
-									</form>
-									<div className='bg-white'>
-										<ul>
-											{searchResults.map((result) => (
-												<li key={result.id} className='flex items-center border-b p-2'>
-													{result.title}
-												</li>
-											))}
-										</ul>
-									</div>
-									<button className='text-white' onClick={handlePopUp}>
-										Save Game
-									</button>
-								</div>
-							</Popover.Panel>
-						</div>
-					</Popover>
-				</div>	
-			</nav>
-
-			<div className="m-4">
-				{popUp && <Popup onClose={() => setPopUp(false)} />}
-			</div>
-
+			<ChatNav />
 			{/* render messages */}
 			<div className={`flex-grow overflow-y-auto space-y-5 break-all p-2 px-10`} ref={messagesContainerRef}>
 				{messages.map((msg, index) => (
