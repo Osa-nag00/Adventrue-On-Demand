@@ -1,12 +1,16 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import Dropdown from "../components/sub-components/Dropdown";
+import { Popover } from '@headlessui/react'
+import Popup from '../components/sub-components/Popup.js'
 
 export default function Chat() {
 	const [message, setMessage] = useState("");
 	const [messages, setMessages] = useState([]);
 	const messagesContainerRef = useRef(null);
+	const [searchInput, setSearchInput] = useState('');
+    const [searchResults, setSearchResult] = useState([]);
+    const [popUp, setPopUp] = useState(false);
 
 	const getSide = (msg) => {
 		return msg.sender === "me" ? "justify-end" : "justify-start";
@@ -47,6 +51,18 @@ export default function Chat() {
 		setMessages(result);
 	};
 
+	const handleSubmission = (event) => {
+        // send fetch to db
+        let res = [];
+        // res = fetch(searchInput)
+        // setSearchResults(res)
+        setSearchInput('');
+    };
+
+    const handlePopUp = (event) => {
+        setPopUp(!popUp);
+    };
+
 	useEffect(() => {
 		messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
 	}, [messages]);
@@ -59,14 +75,42 @@ export default function Chat() {
 	// - the messages are stored in the "messages" state variable
 
 	return (
-		// this for showing the msgs
 		<div className='flex flex-col h-screen'>
 
+			{/* {dropdown} */}
 			<div className="flex justify-end mr-4 mt-4">
                 <div>
-                    <Dropdown/>
+					<Popover>
+						<Popover.Button className={'text-xl'} onClick={() => popUp == true ? setPopUp(false) : setPopUp(false)}>Options</Popover.Button>
+						<div className='bg-neutral-950/50'>
+							<Popover.Panel>
+								<div className='flex flex-col gap-2 p-2'>
+									<form>
+										<input
+											className='p-2 w-32 h-8 bg-white border rounded-xl border-stone-500 text-black text-m font-normal font-["IM FELL English"]'
+											type='text'
+											placeholder='Search Game...'
+											onChange={(e) => setSearchInput(e.target.value)}
+											value={searchInput}
+											onSubmit={handleSubmission}
+										/>
+									</form>
+									<div>
+									{searchResults.map((res, index) => (
+										<div key={index} >
+											<div href={res.link}>{res.name}</div>
+										</div>
+									))}
+									</div>
+									<button className='text-white' onClick={handlePopUp}>Save Game</button>
+									<button className='text-white'>Logout</button>
+								</div>                    
+							</Popover.Panel>
+						</div>
+					</Popover>
                 </div>
             </div>
+			{popUp && <Popup onClose={() => setPopUp(false)} /> }
 
 			<div className={`flex-grow overflow-y-auto space-y-5 break-all p-2 px-10`} ref={messagesContainerRef}>
 				{messages.map((msg, index) => (
