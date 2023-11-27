@@ -1,118 +1,111 @@
-import dotenv from 'dotenv';
+import dotenv from "dotenv";
 import mongoose from "mongoose";
-import OpenAI from 'openai';
-import Story  from './models/storyModel.js';
+import OpenAI from "openai";
+import Story from "./models/storyModel.js";
+import { prompt } from "./prompt.js";
 
-dotenv.config({ path: '../../.env' });
+dotenv.config({ path: "../../.env" });
 
 const connectToDatabase = async () => {
-  try {
-    if (mongoose.connection.readyState === 1) {
-      console.log('Already connected to the database');
-      return;
-    }
+	try {
+		if (mongoose.connection.readyState === 1) {
+			console.log("Already connected to the database");
+			return;
+		}
 
-    await mongoose.connect(process.env.mongoDBURL);
-    console.log('App connected to the database');
-  } catch (error) {
-    console.error('Error connecting to database:', error);
-  }
+		await mongoose.connect(process.env.mongoDBURL);
+		console.log("App connected to the database");
+	} catch (error) {
+		console.error("Error connecting to database:", error);
+	}
 };
- 
+
 export async function GET(request) {
-  
-  const fullConversation = []
+	const fullConversation = [];
 
-  const instructionsText = "You are an AI guide and will not allow under any circumstances " +
-                       "for any messages outside of the RPG and its theme.";
+	// const instructionsText =
+	// 	"You are an AI guide and will not allow under any circumstances " +
+	// 	"for any messages outside of the RPG and its theme.";
 
-  const instructions = {
-      role: 'system',
-      content: instructionsText
-  }
+	const instructionsText = prompt;
 
-  fullConversation.push(instructions);
+	const instructions = {
+		role: "system",
+		content: instructionsText,
+	};
 
-  const introMessage = "Welcome to the Text-based RPG Adventure! I am your AI guide. " +
-                       "Get ready for an epic journey!";
-  const gameConcept = "In this game, you'll make decisions that shape the story. " + 
-                      "Begin by entering a theme to base the game off of!";
-  const fullIntro = `${introMessage}\n${gameConcept}`;
+	fullConversation.push(instructions);
 
-  const intro = {
-      role: 'assistant',
-      content: fullIntro
-  }
+	const introMessage =
+		"Welcome to the Text-based RPG Adventure! I am your AI guide. " +
+		"Get ready for an epic journey! say 'start' to begin!";
+	const fullIntro = `${introMessage}`;
 
-  fullConversation.push(intro);
+	const intro = {
+		role: "assistant",
+		content: fullIntro,
+	};
 
-  return Response.json({ introduction: fullIntro, conversation: fullConversation });
+	fullConversation.push(intro);
+
+	return Response.json({ introduction: fullIntro, conversation: fullConversation });
 }
- 
+
 const openai = new OpenAI({ apiKey: process.env.OPEN_AI_API_KEY });
 export async function POST(request) {
-  try {
+	try {
+		const body = await request.json();
 
-    const body = await request.json();
+		if (body && body.conversation) {
+			const conversation = body.conversation;
 
-    if (body && body.conversation) {
-      const conversation = body.conversation;
+			const completion = await openai.chat.completions.create({
+				messages: conversation,
+				model: "gpt-3.5-turbo",
+			});
 
-      const completion = await openai.chat.completions.create({
-        messages: conversation,
-        model: 'gpt-3.5-turbo',
-      });
+			const aiResponse = completion.choices[0].message.content;
 
-      const aiResponse = completion.choices[0].message.content;
+			console.log(completion.choices[0]);
+			console.log(conversation);
 
-      console.log(completion.choices[0]);
-      console.log(conversation);
-
-      return Response.json({ generatedText: aiResponse });
-
-    } else {
-
-      console.error('Invalid request body:', body);
-      return Response.json({ error: 'Invalid request body' });
-
-    }
-  } catch (error) {
-      
-      console.error('Error:', error.message);
-      return Response.json({ error: 'Internal Server Error' });
-
-  }
-
+			return Response.json({ generatedText: aiResponse });
+		} else {
+			console.error("Invalid request body:", body);
+			return Response.json({ error: "Invalid request body" });
+		}
+	} catch (error) {
+		console.error("Error:", error.message);
+		return Response.json({ error: "Internal Server Error" });
+	}
 }
 
 export async function PUT(request) {
-  try {
-    // Call the function to connect to the database
-    connectToDatabase();
-    
-    const body = await request.json();
-    const chatname = body.chatname;
-    const username = body.username;
-    const convo = body.conversation;
+	try {
+		// Call the function to connect to the database
+		connectToDatabase();
 
-    // check if the user exists 
-    const chat = await Story.findOne({ username: username, name: chatname });
+		const body = await request.json();
+		const chatname = body.chatname;
+		const username = body.username;
+		const convo = body.conversation;
 
-    if (chat) { 
-        return Response.json({ error: "Chat already exists with this name" }, { status: 400 }); 
-    } else { 
-        const fullStory = {
-            name: chatname,
-            username: username,
-            conversation: convo
-        };
+		// check if the user exists
+		const chat = await Story.findOne({ username: username, name: chatname });
 
-        const story = await Story.create(fullStory);
-        return Response.json({ status: "Succesfully added story to database" });
-    }
-  }
+		if (chat) {
+			return Response.json({ error: "Chat already exists with this name" }, { status: 400 });
+		} else {
+			const fullStory = {
+				name: chatname,
+				username: username,
+				conversation: convo,
+			};
 
-  catch(error) {
-    return Response.json({ error }, { status: 400 });
-  }
+			const story = await Story.create(fullStory);
+			return Response.json({ status: "Succesfully added story to database" });
+		}
+	} catch (error) {
+		return Response.json({ error }, { status: 400 });
+	}
 }

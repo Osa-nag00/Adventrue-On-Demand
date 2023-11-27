@@ -4,8 +4,6 @@ import UserCard from "./components/UserCard";
 import GoogleSignInButton from "./components/sub-components/GoogleSignInButton";
 
 export default function Home() {
-	// TODO: button goes to chat rn, change to login later (?)
-
 	return (
 		<div>
 			<div className='flex justify-end'>
@@ -14,11 +12,10 @@ export default function Home() {
 			<div className='flex flex-row justify-center '>
 				<div className='flex flex-col items-center p-20 space-y-20'>
 					<Title />
-					<p className='font-bold'>
-						Quis eu Lorem non nisi ut. Consectetur qui sint aliquip amet tempor in ea ipsum et. Dolore irure velit sint
-						et. This will be an overview on the project and what you can do blah blah blah Dolor dolore sint elit
-						cupidatat sunt ullamco ea laborum incididunt labore sint anim ea proident. Tempor excepteur magna enim
-						laborum aute do.
+					<p className='font-bold text-lg bg'>
+						Welcome to the world of AI Dungeons and Dragons, a realm teeming with magic and mystery. In this unique
+						Dungeons & Dragons adventure, the narrative unfolds through a dynamic chat interface powered by OpenAI. As
+						the Dungeon Master, I will guide you, the player, through a whimsical and heroic high fantasy campaign.
 					</p>
 					<GoogleSignInButton />
 					<MainLoginButton />
