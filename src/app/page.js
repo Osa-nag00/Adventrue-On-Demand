@@ -2,6 +2,7 @@ import Title from "./components/sub-components/Title";
 import MainLoginButton from "./components/sub-components/MainLoginButton";
 import UserCard from "./components/UserCard";
 import GoogleSignInButton from "./components/sub-components/GoogleSignInButton";
+import ViewPastChatButton from "./components/sub-components/ViewPastChatButton";
 
 export default function Home() {
 	return (
@@ -18,6 +19,7 @@ export default function Home() {
 						the Dungeon Master, I will guide you, the player, through a whimsical and heroic high fantasy campaign.
 					</p>
 					<GoogleSignInButton />
+					<ViewPastChatButton />
 					<MainLoginButton />
 				</div>
 			</div>

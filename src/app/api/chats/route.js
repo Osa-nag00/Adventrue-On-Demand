@@ -16,18 +16,12 @@ const connectToDatabase = async () => {
 	}
 };
 
-export async function GET(request) {
+export async function GET() {
 	try {
-		const reqBody = await request.json();
-
-		if (!reqBody) {
-			return Response.json({ error: "Request body cannot be empty" }, { status: 400 });
-		}
-
-		const { email } = reqBody;
+		connectToDatabase();
 
 		// Find the document with the given email
-		const story = await Story.findOne({ email });
+		const story = await Story.findOne();
 
 		if (!story) {
 			return Response.json({ error: "No chat found for the given email" }, { status: 404 });
