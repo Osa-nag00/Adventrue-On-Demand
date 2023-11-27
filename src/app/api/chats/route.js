@@ -1,10 +1,7 @@
-import dotenv from "dotenv";
 import mongoose from "mongoose";
 import OpenAI from "openai";
 import Story from "./models/storyModel.js";
 import { prompt } from "./prompt.js";
-
-dotenv.config({ path: "../../.env" });
 
 const connectToDatabase = async () => {
 	try {
@@ -13,7 +10,7 @@ const connectToDatabase = async () => {
 			return;
 		}
 
-		await mongoose.connect(process.env.mongoDBURL);
+		await mongoose.connect(process.env.MONGO_URI);
 		console.log("App connected to the database");
 	} catch (error) {
 		console.error("Error connecting to database:", error);
