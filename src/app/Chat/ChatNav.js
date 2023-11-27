@@ -25,17 +25,37 @@ export default function ChatNav({ messages, session }) {
 		});
 	};
 
-	const handlePopUp = () => {
-		setPopUp(!popUp);
-	};
-
 	return (
 		<div>
 			<nav className='flex justify-between'>
 				<div>
 					<UserCard />
 				</div>
+				{/* dropdown */}
+				<div>
+					<Popover>
+						<Popover.Button
+							className={"bg-navbarBg rounded-lg shadow-lg m-4 text-white text-xl p-6 mb-0"}
+							onClick={() => (popUp == true ? setPopUp(false) : setPopUp(false))}
+						>
+							Options
+						</Popover.Button>
+						<div className='bg-navbarBg'>
+							<Popover.Panel>
+								<div className='flex flex-col p-3 gap-2'>
+									<form className='mb-0 '></form>
+
+									<button className='text-white' onClick={handleSave}>
+										Save Game
+									</button>
+								</div>
+							</Popover.Panel>
+						</div>
+					</Popover>
+				</div>
 			</nav>
+
+			<div className='m-4'>{popUp && <Popup onClose={() => setPopUp(false)} />}</div>
 		</div>
 	);
 }
