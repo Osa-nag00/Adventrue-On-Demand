@@ -3,12 +3,14 @@
 import React, { useState } from "react";
 import { Popover } from "@headlessui/react";
 import Popup from "../components/sub-components/Popup.js";
+import { useRouter } from "next/navigation";
 import UserCard from "../components/UserCard.js";
 
 export default function ChatNav({ messages, session }) {
 	const [searchInput, setSearchInput] = useState("");
 	const [searchResults, setSearchResult] = useState([]);
 	const [popUp, setPopUp] = useState(false);
+	const router = useRouter("");
 
 	const handleSave = () => {
 		// send fetch to db
@@ -23,10 +25,6 @@ export default function ChatNav({ messages, session }) {
 			},
 			body: send,
 		});
-	};
-
-	const handlePopUp = () => {
-		setPopUp(!popUp);
 	};
 
 	return (
@@ -49,8 +47,13 @@ export default function ChatNav({ messages, session }) {
 								<div className='flex flex-col p-3 gap-2'>
 									<form className='mb-0 '></form>
 
-									<button className='text-white' onClick={handleSave}>
-										Save Game
+									<button
+										className='text-white'
+										onClick={() => {
+											router.replace("/");
+										}}
+									>
+										Exit
 									</button>
 								</div>
 							</Popover.Panel>
