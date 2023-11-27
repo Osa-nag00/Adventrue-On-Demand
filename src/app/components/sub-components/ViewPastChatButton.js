@@ -19,7 +19,7 @@ export default function MainLoginButton() {
 			type='button'
 			onClick={handleClick}
 		>
-			Click Here to Start Your Journey
+			Click Here to View Previous Journey
 		</button>
 	);
 }
