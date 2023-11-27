@@ -1,86 +1,99 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Popover } from "@headlessui/react";
-import Popup from "../components/sub-components/Popup.js";
+import ChatNav from "./ChatNav.js";
+import { motion } from "framer-motion";
 
 export default function Chat() {
 	const [message, setMessage] = useState("");
+	const [aiResponse, setAiResponse] = useState("");
 	const [messages, setMessages] = useState([]);
+	const [isLoading, setIsLoading] = useState(false); // Added loading state
 	const messagesContainerRef = useRef(null);
 	const { data: session } = useSession();
 	const router = useRouter("");
+
+	// Fetch introduction method
+	const fetchIntroduction = async () => {
+		try {
+			setIsLoading(true); // Set loading state to true
+			const response = await fetch("/api/chats");
+			const data = await response.json();
+			// Update messages state with introduction method
+			setMessages([...messages, ...data.conversation]);
+			setIsLoading(false); // Set loading state to false
+		} catch (error) {
+			console.error("Error fetching introduction:", error);
+			setIsLoading(false); // Set loading state to false in case of error
+		}
+	};
+
+	const handleSendMessage = async (e) => {
+		e.preventDefault();
+		if (message.trim() !== "") {
+			// Create a new message object with the sender as "user" and the content as the user's message
+			const newMessage = { role: "user", content: message };
+			// Add the new message to the messages state
+			setMessages([...messages, newMessage]);
+			// Clear the message input field
+			setMessage("");
+
+			try {
+				// Create the conversation array with the desired format
+				// Need this here!!
+				// because the API is looking for a "conversation" array
+				let conversation = messages;
+
+				// Make a POST request to add the user's message with the conversation data
+				setIsLoading(true); // Set loading state to true
+				const response = await fetch("/api/chats", {
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify({ conversation }),
+				});
+
+				// Get the response data
+				const responseData = await response.json();
+				setAiResponse(responseData.generatedText);
+
+				// Process the response data as needed
+				setIsLoading(false); // Set loading state to false
+			} catch (error) {
+				console.error("Error adding user's message:", error);
+				setIsLoading(false); // Set loading state to false in case of error
+			}
+		}
+	};
 
 	// if not logged in, redirect to login page
 	if (!session) {
 		router.replace("/");
 	}
 
-	const handleSignOut = (e) => {
-		e.preventDefault();
-		signOut("google");
-	};
-
-	const [searchInput, setSearchInput] = useState("");
-	const [searchResults, setSearchResult] = useState([]);
-	const [popUp, setPopUp] = useState(false);
-
 	const getSide = (msg) => {
-		return msg.sender === "me" ? "justify-end" : "justify-start";
+		return msg.role === "user" ? "justify-end" : "justify-start";
 	};
 
 	const getColor = (msg) => {
-		return msg.sender === "me" ? "bg-[#D9D9D9] text-black" : "bg-[#40403F] text-white";
+		return msg.role === "user" ? "bg-[#D9D9D9] text-black" : "bg-[#40403F] text-white";
 	};
 
 	const handleMessageChange = (event) => {
 		setMessage(event.target.value);
 	};
 
-	// change this to the actual AI response later
-	// change the sender from "me" to test the other side
-	const handleSendMessage = (e) => {
-		e.preventDefault();
-
-		// result array to save user message and response
-		let result = [...messages];
-		if (message.trim() !== "") {
-			result.push({ content: message, sender: "me" });
-			setMessage("");
-		}
-
-		// adding user messages into an array for saving
-		let test = [];
-
-		messages.map((msg) => {
-			test.push(JSON.stringify(msg));
-		});
-		console.log(test);
-
-		// this is where the AI response will be added
-		// let response = fetch(api endpoint)
-		let response = "this is the ai response";
-		result.push({ content: response, sender: "AI" });
-		setMessages(result);
-	};
-
-	const handleSubmission = (event) => {
-		// send fetch to db
-		let res = [];
-		// res = fetch(searchInput)
-		// setSearchResults(res)
-		setSearchInput("");
-	};
-
-	const handlePopUp = (event) => {
-		setPopUp(!popUp);
-	};
-
 	useEffect(() => {
 		messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
 	}, [messages]);
+
+	useEffect(() => {
+		const newMessage = { role: "assistant", content: aiResponse };
+		setMessages([...messages, newMessage]);
+	}, [aiResponse]);
 
 	// small notes:
 	// - the "overflow-y-auto" class is what makes the messages scrollable
@@ -89,64 +102,42 @@ export default function Chat() {
 	// - the message object has a "content" property, which is the actual message
 	// - the messages are stored in the "messages" state variable
 
+	useEffect(() => {
+		// Fetch introduction method when component mounts
+		fetchIntroduction();
+	}, []);
+
 	return (
 		<div className='flex flex-col h-screen'>
-			<nav className="bg-yellow-950/80">
-				{/* dropdown */}
-				<div className='flex justify-end p-6'>
-					<div>
-						<Popover>
-							<Popover.Button className={"text-xl"} onClick={() => (popUp == true ? setPopUp(false) : setPopUp(false))}>
-								Options
-							</Popover.Button>
-							<div className='bg-neutral-950/50'>
-								<Popover.Panel>
-									<div className='flex flex-col p-3 gap-2'>
-										<form className="mb-0">
-											<input
-												className='p-2 w-32 h-8 bg-white border rounded-xl border-stone-500 text-black text-m font-normal font-["IM FELL English"]'
-												type='text'
-												placeholder='Search Game...'
-												onChange={(e) => setSearchInput(e.target.value)}
-												value={searchInput}
-												onSubmit={handleSubmission}
-											/>
-										</form>
-										<div className='bg-white'>
-											<ul>
-												{searchResults.map((result) => (
-													<li key={result.id} className='flex items-center border-b p-2'>
-														{result.title}
-													</li>
-												))}
-											</ul>
-										</div>
-										<button className='text-white' onClick={handlePopUp}>
-											Save Game
-										</button>
-										<button className='text-white' onClick={handleSignOut}>
-											Logout
-										</button>
-									</div>
-								</Popover.Panel>
-							</div>
-						</Popover>
-					</div>
-				</div>
-			</nav>
-			
-			<div className="m-4">
-				{popUp && <Popup onClose={() => setPopUp(false)} />}
-			</div>
-
+			<ChatNav session={session} messages={messages} />
 			{/* render messages */}
-			<div className={`flex-grow overflow-y-auto space-y-5 break-all p-2 px-10`} ref={messagesContainerRef}>
-				{messages.map((msg, index) => (
-					<div key={index} className={`flex ${getSide(msg)} `}>
-						<div className={`${getColor(msg)} rounded max-w-fit text-2xl p-2`}>{msg.content}</div>
-					</div>
+			<div
+				className={`flex-grow overflow-y-auto space-y-5 break-all p-2 px-10 text-lg lg:text-2xl`}
+				ref={messagesContainerRef}
+				style={{ wordBreak: "break-word", scrollBehavior: "smooth" }}
+			>
+				{messages.slice(1).map((msg, index) => (
+					<motion.div
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						exit={{ opacity: 0, y: -20 }}
+						transition={{ duration: 0.3 }}
+						key={index}
+						className={`flex ${getSide(msg)} `}
+					>
+						<div className={`${getColor(msg)} rounded max-w-[70%]  p-2 whitespace-pre-wrap`}>
+							<div>{msg.content}</div>
+						</div>
+					</motion.div>
 				))}
 			</div>
+
+			{/* Render loading box */}
+			{isLoading && (
+				<div className='flex items-center justify-center h-20'>
+					<div className='animate-spin rounded-full h-10 w-10 border-t-4 border-b-4 border-gray-900'></div>
+				</div>
+			)}
 
 			{/* stuff below is the msg enter box */}
 			<form onSubmit={handleSendMessage}>
@@ -160,8 +151,8 @@ export default function Chat() {
 					/>
 					<div className='pr-4'></div>
 					<button
-						type='submit'
-						className='w-64 h-10 bg-buttonBg rounded-lg border-[1px] border-black '
+						type='button'
+						className='w-44 lg:w-64 h-10 bg-buttonBg text-white rounded-lg border-[1px] border-black '
 						onClick={handleSendMessage}
 					>
 						Send
