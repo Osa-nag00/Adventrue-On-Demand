@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import ChatNav from "./ChatNav.js";
+import { motion } from "framer-motion";
 
 export default function Chat() {
 	const [message, setMessage] = useState("");
@@ -113,12 +114,21 @@ export default function Chat() {
 			<div
 				className={`flex-grow overflow-y-auto space-y-5 break-all p-2 px-10 text-lg lg:text-2xl`}
 				ref={messagesContainerRef}
-				style={{ wordBreak: "break-word" }}
+				style={{ wordBreak: "break-word", scrollBehavior: "smooth" }}
 			>
 				{messages.slice(1).map((msg, index) => (
-					<div key={index} className={`flex ${getSide(msg)} `}>
-						<div className={`${getColor(msg)} rounded max-w-[70%]  p-2 whitespace-pre-wrap`}>{msg.content}</div>
-					</div>
+					<motion.div
+						initial={{ opacity: 0, y: 20 }}
+						animate={{ opacity: 1, y: 0 }}
+						exit={{ opacity: 0, y: -20 }}
+						transition={{ duration: 0.3 }}
+						key={index}
+						className={`flex ${getSide(msg)} `}
+					>
+						<div className={`${getColor(msg)} rounded max-w-[70%]  p-2 whitespace-pre-wrap`}>
+							<div>{msg.content}</div>
+						</div>
+					</motion.div>
 				))}
 			</div>
 
