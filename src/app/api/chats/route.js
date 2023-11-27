@@ -63,8 +63,8 @@ export async function POST(request) {
 
 			const aiResponse = completion.choices[0].message.content;
 
-			console.log(completion.choices[0]);
-			console.log(conversation);
+			// console.log(completion.choices[0]);
+			// console.log(conversation);
 
 			return Response.json({ generatedText: aiResponse });
 		} else {

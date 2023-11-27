@@ -42,7 +42,10 @@ export default function Chat() {
 
 			try {
 				// Create the conversation array with the desired format
+				// Need this here!!
+				// because the API is looking for a "conversation" array
 				let conversation = messages;
+
 				// Make a POST request to add the user's message with the conversation data
 				setIsLoading(true); // Set loading state to true
 				const response = await fetch("/api/chats", {
@@ -90,7 +93,7 @@ export default function Chat() {
 	useEffect(() => {
 		const newMessage = { role: "assistant", content: aiResponse };
 		setMessages([...messages, newMessage]);
-	}, []);
+	}, [aiResponse]);
 
 	// small notes:
 	// - the "overflow-y-auto" class is what makes the messages scrollable
