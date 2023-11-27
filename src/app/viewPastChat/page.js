@@ -28,6 +28,9 @@ export default function Chat() {
 			if (response.ok) {
 				const data = await response.json();
 				// Process the data as needed
+
+				// TODO: finish this
+
 				data.map((item) => {
 					console.log(item);
 					// Perform operations on each item in the data array

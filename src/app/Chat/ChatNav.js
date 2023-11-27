@@ -25,6 +25,8 @@ export default function ChatNav({ messages, session }) {
 		});
 	};
 
+	// TODO: come back add exit button to popup
+
 	return (
 		<div>
 			<nav className='flex justify-between'>
