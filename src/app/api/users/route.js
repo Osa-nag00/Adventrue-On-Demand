@@ -58,7 +58,7 @@ export async function POST(request) {
 		}
 
 		// Return the saved user
-		return Response.json("Added new user", { status: 201 });
+		return Response.json("Added new story", { status: 201 });
 	} catch (error) {
 		console.error("Error in POST request:", error);
 		return Response.json({ error: "Internal Server Error" }, { status: 500 });

@@ -1,21 +1,28 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { Popover } from "@headlessui/react";
 import Popup from "../components/sub-components/Popup.js";
 import UserCard from "../components/UserCard.js";
 
-export default function ChatNav() {
+export default function ChatNav({ messages, session }) {
 	const [searchInput, setSearchInput] = useState("");
 	const [searchResults, setSearchResult] = useState([]);
 	const [popUp, setPopUp] = useState(false);
 
-	const handleSubmission = () => {
+	const handleSave = () => {
 		// send fetch to db
-		let res = [];
-		// res = fetch(searchInput)
-		// setSearchResults(res)
-		setSearchInput("");
+
+		const body = { email: session.user.email, name: session.user.name, messages: messages };
+		const send = JSON.stringify(body);
+
+		fetch("/api/saveChat", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+			body: send,
+		});
 	};
 
 	const handlePopUp = () => {
@@ -40,26 +47,9 @@ export default function ChatNav() {
 						<div className='bg-navbarBg'>
 							<Popover.Panel>
 								<div className='flex flex-col p-3 gap-2'>
-									<form className='mb-0'>
-										<input
-											className='p-2 w-32 h-8 bg-white border rounded-xl border-stone-500 text-black text-m font-normal '
-											type='text'
-											placeholder='Search Game...'
-											onChange={(e) => setSearchInput(e.target.value)}
-											value={searchInput}
-											onSubmit={handleSubmission}
-										/>
-									</form>
-									<div className='bg-white'>
-										<ul>
-											{searchResults.map((result) => (
-												<li key={result.id} className='flex items-center border-b p-2'>
-													{result.title}
-												</li>
-											))}
-										</ul>
-									</div>
-									<button className='text-white' onClick={handlePopUp}>
+									<form className='mb-0 '></form>
+
+									<button className='text-white' onClick={handleSave}>
 										Save Game
 									</button>
 								</div>

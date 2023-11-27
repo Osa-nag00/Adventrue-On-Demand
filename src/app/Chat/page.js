@@ -10,7 +10,6 @@ export default function Chat() {
 	const [message, setMessage] = useState("");
 	const [aiResponse, setAiResponse] = useState("");
 	const [messages, setMessages] = useState([]);
-	const [conversation, setConversation] = useState();
 	const [isLoading, setIsLoading] = useState(false); // Added loading state
 	const messagesContainerRef = useRef(null);
 	const { data: session } = useSession();
@@ -44,7 +43,6 @@ export default function Chat() {
 			try {
 				// Create the conversation array with the desired format
 				let conversation = messages;
-				console.log(conversation);
 				// Make a POST request to add the user's message with the conversation data
 				setIsLoading(true); // Set loading state to true
 				const response = await fetch("/api/chats", {
@@ -58,7 +56,6 @@ export default function Chat() {
 				// Get the response data
 				const responseData = await response.json();
 				setAiResponse(responseData.generatedText);
-				console.log(responseData.generatedText);
 
 				// Process the response data as needed
 				setIsLoading(false); // Set loading state to false
@@ -93,7 +90,7 @@ export default function Chat() {
 	useEffect(() => {
 		const newMessage = { role: "assistant", content: aiResponse };
 		setMessages([...messages, newMessage]);
-	}, [aiResponse]);
+	}, []);
 
 	// small notes:
 	// - the "overflow-y-auto" class is what makes the messages scrollable
@@ -109,7 +106,7 @@ export default function Chat() {
 
 	return (
 		<div className='flex flex-col h-screen'>
-			<ChatNav />
+			<ChatNav session={session} messages={messages} />
 			{/* render messages */}
 			<div
 				className={`flex-grow overflow-y-auto space-y-5 break-all p-2 px-10 text-lg lg:text-2xl`}
@@ -151,7 +148,7 @@ export default function Chat() {
 					/>
 					<div className='pr-4'></div>
 					<button
-						type='submit'
+						type='button'
 						className='w-44 lg:w-64 h-10 bg-buttonBg text-white rounded-lg border-[1px] border-black '
 						onClick={handleSendMessage}
 					>
