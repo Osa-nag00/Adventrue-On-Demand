@@ -1,8 +1,7 @@
 import mongoose from "mongoose";
-import OpenAI from "openai";
 import Story from "./models/storyModel.js";
-import { prompt } from "./prompt.js";
 
+// Connect to the database
 const connectToDatabase = async () => {
 	try {
 		if (mongoose.connection.readyState === 1) {
@@ -18,91 +17,59 @@ const connectToDatabase = async () => {
 };
 
 export async function GET(request) {
-	const fullConversation = [];
-
-	// const instructionsText =
-	// 	"You are an AI guide and will not allow under any circumstances " +
-	// 	"for any messages outside of the RPG and its theme.";
-
-	const instructionsText = prompt;
-
-	const instructions = {
-		role: "system",
-		content: instructionsText,
-	};
-
-	fullConversation.push(instructions);
-
-	const introMessage =
-		"Welcome to the Text-based RPG Adventure! I am your AI guide. " +
-		"Get ready for an epic journey! say 'start' to begin!";
-	const fullIntro = `${introMessage}`;
-
-	const intro = {
-		role: "assistant",
-		content: fullIntro,
-	};
-
-	fullConversation.push(intro);
-
-	return Response.json({ introduction: fullIntro, conversation: fullConversation });
-}
-
-const openai = new OpenAI({ apiKey: process.env.OPEN_AI_API_KEY });
-export async function POST(request) {
 	try {
-		const body = await request.json();
+		const reqBody = await request.json();
 
-		if (body && body.conversation) {
-			const conversation = body.conversation;
-
-			const completion = await openai.chat.completions.create({
-				messages: conversation,
-				model: "gpt-3.5-turbo",
-			});
-
-			const aiResponse = completion.choices[0].message.content;
-
-			// console.log(completion.choices[0]);
-			// console.log(conversation);
-
-			return Response.json({ generatedText: aiResponse });
-		} else {
-			console.error("Invalid request body:", body);
-			return Response.json({ error: "Invalid request body" });
+		if (!reqBody) {
+			return Response.json({ error: "Request body cannot be empty" }, { status: 400 });
 		}
+
+		const { email } = reqBody;
+
+		// Find the document with the given email
+		const story = await Story.findOne({ email });
+
+		if (!story) {
+			return Response.json({ error: "No chat found for the given email" }, { status: 404 });
+		}
+
+		return Response.json({ story }, { status: 200 });
 	} catch (error) {
-		console.error("Error:", error.message);
-		return Response.json({ error: "Internal Server Error" });
+		console.error("Error in GET request:", error);
+		return Response.json({ error: "Internal Server Error" }, { status: 500 });
 	}
 }
 
-export async function PUT(request) {
+export async function POST(request) {
 	try {
 		// Call the function to connect to the database
 		connectToDatabase();
+		const reqBody = await request.json();
 
-		const body = await request.json();
-		const chatname = body.chatname;
-		const username = body.username;
-		const convo = body.conversation;
-
-		// check if the user exists
-		const chat = await Story.findOne({ username: username, name: chatname });
-
-		if (chat) {
-			return Response.json({ error: "Chat already exists with this name" }, { status: 400 });
-		} else {
-			const fullStory = {
-				name: chatname,
-				username: username,
-				conversation: convo,
-			};
-
-			const story = await Story.create(fullStory);
-			return Response.json({ status: "Succesfully added story to database" });
+		if (!reqBody) {
+			return Response.json({ error: "Request body cannot be empty" }, { status: 400 });
 		}
+
+		const { email, name, messages } = reqBody;
+
+		// Find the existing document with the given email
+		const existingStory = await Story.findOne({ email });
+
+		if (existingStory) {
+			// Update the existing document
+			await Story.findOneAndUpdate({ email }, { name, messages }, { upsert: true });
+		} else {
+			// Create a new document
+			await Story.create({ email, name, messages });
+		}
+
+		// when the user is created, delete all users with null email or name
+		// bug is fixed with this where a user is created with null email and name
+		await Story.deleteMany({ $or: [{ email: null }, { name: null }, { messages: null }] });
+
+		return Response.json({ message: "Chat saved successfully" }, { status: 200 });
 	} catch (error) {
-		return Response.json({ error }, { status: 400 });
+		console.error("Error in POST request:", error);
+		return Response.json({ error: "Internal Server Error" }, { status: 500 });
 	}
 }

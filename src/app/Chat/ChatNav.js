@@ -16,7 +16,7 @@ export default function ChatNav({ messages, session }) {
 		const body = { email: session.user.email, name: session.user.name, messages: messages };
 		const send = JSON.stringify(body);
 
-		fetch("/api/saveChat", {
+		fetch("/api/chats", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
