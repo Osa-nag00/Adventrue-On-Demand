@@ -19,7 +19,7 @@ export default function Chat() {
 	const fetchIntroduction = async () => {
 		try {
 			setIsLoading(true); // Set loading state to true
-			const response = await fetch("/api/chats");
+			const response = await fetch("/api/openai");
 			const data = await response.json();
 			// Update messages state with introduction method
 			setMessages([...messages, ...data.conversation]);
@@ -48,7 +48,7 @@ export default function Chat() {
 
 				// Make a POST request to add the user's message with the conversation data
 				setIsLoading(true); // Set loading state to true
-				const response = await fetch("/api/chats", {
+				const response = await fetch("/api/openai", {
 					method: "POST",
 					headers: {
 						"Content-Type": "application/json",

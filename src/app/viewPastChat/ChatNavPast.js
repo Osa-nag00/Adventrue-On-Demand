@@ -7,27 +7,8 @@ import { useRouter } from "next/navigation";
 import UserCard from "../components/UserCard.js";
 
 export default function ChatNav({ messages, session }) {
-	const [searchInput, setSearchInput] = useState("");
-	const [searchResults, setSearchResult] = useState([]);
 	const [popUp, setPopUp] = useState(false);
 	const router = useRouter("");
-
-	const handleSave = () => {
-		// send fetch to db
-
-		const body = { email: session.user.email, name: session.user.name, messages: messages };
-		const send = JSON.stringify(body);
-
-		fetch("/api/chats", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: send,
-		});
-	};
-
-	// TODO: come back add exit button to popup
 
 	return (
 		<div>
@@ -49,9 +30,6 @@ export default function ChatNav({ messages, session }) {
 								<div className='flex flex-col p-3 gap-2'>
 									<form className='mb-0 '></form>
 
-									<button className='text-white' onClick={handleSave}>
-										Save Game
-									</button>
 									<button
 										className='text-white'
 										onClick={() => {
