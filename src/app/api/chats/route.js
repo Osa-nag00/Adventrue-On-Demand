@@ -20,14 +20,14 @@ export async function GET() {
 	try {
 		connectToDatabase();
 
-		// Find the document with the given email
-		const story = await Story.findOne();
+		// Find all documents in the collection
+		const stories = await Story.find();
 
-		if (!story) {
-			return Response.json({ error: "No chat found for the given email" }, { status: 404 });
+		if (!stories) {
+			return Response.json({ error: "No stories found" }, { status: 404 });
 		}
 
-		return Response.json({ story }, { status: 200 });
+		return Response.json({ stories }, { status: 200 });
 	} catch (error) {
 		console.error("Error in GET request:", error);
 		return Response.json({ error: "Internal Server Error" }, { status: 500 });

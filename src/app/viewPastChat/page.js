@@ -3,14 +3,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import ChatNav from "./ChatNav.js";
+import ChatNavPast from "./ChatNavPast.js";
 import { motion } from "framer-motion";
+import { set } from "mongoose";
 
 export default function Chat() {
-	const [message, setMessage] = useState("");
-	const [aiResponse, setAiResponse] = useState("");
 	const [messages, setMessages] = useState([]);
-	const [isLoading, setIsLoading] = useState(false); // Added loading state
 	const messagesContainerRef = useRef(null);
 	const { data: session } = useSession();
 	const router = useRouter("");
@@ -27,18 +25,13 @@ export default function Chat() {
 
 			if (response.ok) {
 				const data = await response.json();
-				// Process the data as needed
 
-				// TODO: finish this
-
-				data.map((item) => {
-					console.log(item);
-					// Perform operations on each item in the data array
-					// For example, you can access properties like item.propertyName
-					// and perform any necessary actions
+				// gets the right messages for the user signed in
+				data.stories.forEach((item) => {
+					if (item.email === session.user.email) {
+						setMessages(item.messages);
+					}
 				});
-
-				setMessages(data.story.messages);
 			} else {
 				throw new Error("Failed to fetch chats");
 			}
@@ -78,7 +71,7 @@ export default function Chat() {
 
 	return (
 		<div className='flex flex-col h-screen'>
-			<ChatNav session={session} messages={messages} />
+			<ChatNavPast session={session} messages={messages} />
 			{/* render messages */}
 			<div
 				className={`flex-grow overflow-y-auto space-y-5 break-all p-2 px-10 text-lg lg:text-2xl`}
