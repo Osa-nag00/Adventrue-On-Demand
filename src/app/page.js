@@ -13,7 +13,7 @@ export default function Home() {
 			<div className='flex flex-row justify-center '>
 				<div className='flex flex-col items-center p-20 space-y-20'>
 					<Title />
-					<p className='font-bold text-lg bg'>
+					<p className='font-bold text-lg bg px-8'>
 						Welcome to the world of AI Dungeons and Dragons, a realm teeming with magic and mystery. In this unique
 						Dungeons & Dragons adventure, the narrative unfolds through a dynamic chat interface powered by OpenAI. As
 						the Dungeon Master, I will guide you, the player, through a whimsical and heroic high fantasy campaign.
